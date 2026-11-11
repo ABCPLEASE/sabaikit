@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>หม้อเหลือง ข้าวซอยเชียงใหม่ | เว็บตัวอย่างโดย SabaiKit</title>
+<meta name="description" content="ตัวอย่างเว็บร้านอาหารหน้าเดียวจาก SabaiKit: เมนู ราคา เวลาเปิดร้าน แผนที่ ปุ่มโทรและ LINE รองรับมือถือ (ร้านและราคาเป็นข้อมูลสมมติ)">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4B41A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai+Looped:wght@400;500;600;700&family=Sriracha&display=swap">
+<style>
+:root{
+  --yolk:#F4B41A;      /* page ground */
+  --yolk-deep:#DF9F0B; /* pressed states, map roads */
+  --ink:#17130C;       /* text, rules, dark sections */
+  --ink-soft:#3B3120;  /* secondary text on yolk */
+  --chili:#B8231A;     /* stamp, shop pin, heat marks */
+  --rice:#FFF7E0;      /* text on ink, small panels */
+  --f-display:'Chonburi','Noto Serif Thai',serif;
+  --f-body:'IBM Plex Sans Thai Looped','Sarabun','Leelawadee UI',system-ui,sans-serif;
+  --f-hand:'Sriracha','Chonburi',cursive;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --gl:max(16px,3.4vw,env(safe-area-inset-left));
+  --gr:max(16px,3.4vw,env(safe-area-inset-right));
+  --rule:2px solid var(--ink);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--yolk);color:var(--ink)}
+.ml{font-family:var(--f-body);font-size:17px;line-height:1.7;color:var(--ink);background:var(--yolk);overflow-x:clip}
+:where(.ml) img{display:block;width:100%;height:auto}
+:where(.ml) :where(h1,h2,h3,p,ul,ol,figure,table){margin:0;padding:0}
+:where(.ml) :where(ul,ol){list-style:none}
+:where(.ml) a{color:inherit}
+.ml h1,.ml h2,.ml h3,.ml blockquote{text-wrap:balance}
+.dish-note,.lede,.sec-head p,.dark .lead{text-wrap:pretty}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:var(--gl);padding-right:var(--gr)}
+.nb{white-space:nowrap}
+.mono{font-family:var(--f-mono);font-weight:500;letter-spacing:.02em}
+.ml :focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.dark :focus-visible,.dock :focus-visible,.sample :focus-visible{outline-color:var(--yolk)}
+
+/* sample note */
+.sample{background:var(--ink);color:var(--yolk);font-size:14px;line-height:1.5;padding-top:7px;padding-bottom:7px}
+.sample b{font-weight:600;color:var(--rice)}
+
+/* top */
+.top{border-bottom:var(--rule)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px}
+.mark{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mark svg{width:34px;height:34px;flex:none}
+.mark span{font-family:var(--f-display);font-size:25px;line-height:1.2;white-space:nowrap}
+.nav{display:none}
+.status{font-size:14px;line-height:1.35;text-align:right;white-space:nowrap}
+.status b{font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.status i{width:10px;height:10px;border-radius:50%;background:var(--chili);flex:none;box-shadow:0 0 0 2px var(--yolk),0 0 0 4px var(--ink)}
+.status.shut i{background:var(--yolk)}
+.status span{display:block}
+
+/* hero */
+.hero{padding-top:28px}
+.hero-text{container-type:inline-size}
+.kicker{font-size:15px;font-weight:600;display:flex;gap:10px;align-items:center}
+.kicker::before{content:"";width:28px;height:2px;background:var(--ink)}
+.ml h1{font-family:var(--f-display);font-weight:400;font-size:15vw;font-size:min(17cqi,7.4rem);line-height:1.16;margin-top:10px;letter-spacing:-.01em}
+.ml h1 span{display:block;white-space:nowrap}
+.hero-photo{position:relative;margin-top:22px;margin-right:calc(-1*var(--gr))}
+.hero-photo img{aspect-ratio:8/7;object-fit:cover;border:var(--rule);border-right:0}
+.stamp{position:absolute;top:-30px;right:14px;width:124px;height:124px;border-radius:50%;background:var(--chili);color:var(--rice);display:grid;place-content:center;text-align:center;transform:rotate(-11deg);box-shadow:inset 0 0 0 4px var(--chili),inset 0 0 0 6px var(--rice);animation:thunk .5s cubic-bezier(.2,1.6,.4,1) .5s both}
+.stamp small{display:block;font-size:13px;font-weight:600;line-height:1.3}
+.stamp strong{display:block;font-family:var(--f-display);font-weight:400;font-size:44px;line-height:1.05}
+@keyframes thunk{from{transform:rotate(-2deg) scale(1.5);opacity:0}to{transform:rotate(-11deg) scale(1);opacity:1}}
+.lede{margin-top:22px;font-size:18px;max-width:31em}
+.lede em{font-style:normal;font-family:var(--f-hand);font-size:1.12em}
+.acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.btn{font:inherit;font-weight:700;font-size:17px;line-height:1.3;display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border:var(--rule);background:var(--ink);color:var(--yolk);text-decoration:none;cursor:pointer;border-radius:0;transition:transform .12s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--yolk);box-shadow:none;transform:none}
+.btn:active{transform:none;box-shadow:none}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--rule);border-bottom:var(--rule);margin-top:34px}
+.facts li{padding:12px 0 12px 12px;border-left:var(--rule)}
+.facts li:first-child{border-left:0;padding-left:0}
+.facts span{display:block;font-size:14px;font-weight:600;line-height:1.4}
+.facts b{display:block;font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.3;white-space:nowrap}
+
+/* menu */
+.menu{padding-top:64px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:6px 24px;border-bottom:6px solid var(--ink);padding-bottom:12px}
+.ml h2{font-family:var(--f-display);font-weight:400;font-size:clamp(2.3rem,10.5vw,4.4rem);line-height:1.2}
+.sec-head p{font-size:16px;font-weight:500;max-width:19em}
+.group h3{font-family:var(--f-display);font-weight:400;font-size:25px;line-height:1.3;display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 8px;border-bottom:var(--rule)}
+.group h3 small{font-family:var(--f-mono);font-size:12px;font-weight:500}
+.dish{display:grid;grid-template-columns:2.1rem 1fr auto;column-gap:6px;align-items:start;padding:14px 0 13px;border-bottom:1px solid var(--ink)}
+.dish .no{font-family:var(--f-mono);font-size:12px;font-weight:500;padding-top:9px}
+.dish-name{font-weight:700;font-size:20px;line-height:1.4}
+.dish-name .veg{font-size:12px;font-weight:700;border:1.5px solid var(--ink);padding:0 5px;margin-left:6px;vertical-align:3px;white-space:nowrap}
+.dish-note{font-size:16px;line-height:1.55;color:var(--ink-soft);margin-top:2px;max-width:26em}
+.price{font-family:var(--f-display);font-size:30px;line-height:1.15;padding-left:10px;white-space:nowrap}
+.price small{font-size:.55em}
+.heatmark{display:inline-flex;gap:3px;margin-left:8px;vertical-align:2px}
+.heatmark i{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--chili)}
+.heatmark i.on{background:var(--chili)}
+.legend{font-size:15px;margin-top:12px;color:var(--ink-soft)}
+.legend .heatmark{margin:0 6px 0 0}
+.extra{margin-top:14px;border:2px dashed var(--ink);padding:10px 14px;font-size:16px;font-weight:500;line-height:1.6}
+.extra b{font-weight:700}
+.pair{display:grid;grid-template-columns:62fr 38fr;gap:10px;align-items:start;margin:30px calc(-1*var(--gr)) 6px 0}
+.pair figure{position:relative}
+.pair img{border:var(--rule)}
+.pair figure:last-child{margin-top:54px}
+.pair figure:last-child img{border-right:0;aspect-ratio:3/4;object-fit:cover}
+.cap{font-family:var(--f-hand);font-size:17px;line-height:1.35;margin-top:6px;display:block}
+.cap b{font-family:var(--f-mono);font-size:12px;font-weight:500;margin-right:5px}
+.drinks{display:grid;grid-template-columns:1fr 104px;gap:14px;align-items:start}
+.drinks figure{margin-top:14px}
+.drinks figure img{border:var(--rule);aspect-ratio:3/5;object-fit:cover}
+.drinks .dish{grid-template-columns:2.1rem 1fr auto}
+.drinks .dish-name{white-space:nowrap}
+@media (max-width:379px){
+  .mark svg{width:28px;height:28px}.mark{gap:7px}.mark span{font-size:22px}
+  .status{font-size:13px}.status b{font-size:14px}
+  .facts b{font-size:18px}.facts li{padding-left:9px}
+  .drinks{grid-template-columns:1fr 78px;gap:10px}
+  .drinks .dish{grid-template-columns:1.7rem 1fr auto}
+  .drinks .dish-name{font-size:18px}.drinks .price{font-size:25px;padding-left:4px}
+}
+
+/* dark: make it your own */
+.dark{background:var(--ink);color:var(--rice);margin-top:64px;padding-top:56px}
+.dark h2{color:var(--yolk)}
+.dark .lead{margin-top:10px;max-width:27em;color:var(--rice)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);margin-top:22px;border:2px solid var(--yolk)}
+.seg button{font:inherit;font-weight:700;font-size:15px;line-height:1.3;padding:14px 2px;background:transparent;color:var(--yolk);border:0;border-left:2px solid var(--yolk);cursor:pointer;border-radius:0}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--yolk);color:var(--ink)}
+.heat-out{margin-top:18px;min-height:9.2em}
+.heat-out .lvl{display:flex;gap:6px}
+.heat-out .lvl i{width:16px;height:16px;border-radius:50%;border:2px solid var(--yolk)}
+.heat-out .lvl i.on{background:var(--chili);border-color:var(--chili)}
+.heat-out strong{display:block;font-family:var(--f-display);font-weight:400;font-size:clamp(1.55rem,6.6vw,2.2rem);line-height:1.3;color:var(--yolk);margin-top:10px}
+.heat-out p{font-size:16px;margin-top:8px;color:var(--rice)}
+.heat-out q{font-family:var(--f-hand);font-size:1.15em;quotes:"“" "”"}
+.jars{margin-top:34px;position:relative}
+.jars img{aspect-ratio:5/6;object-fit:cover}
+.free{padding-top:26px;padding-bottom:56px}
+.free h3{font-family:var(--f-display);font-weight:400;font-size:27px;line-height:1.3;color:var(--yolk)}
+.free ul{display:grid;grid-template-columns:1fr 1fr;column-gap:20px;margin-top:10px;border-top:2px solid var(--yolk)}
+.free li{padding:9px 0;border-bottom:1px solid rgba(244,180,26,.55);font-weight:500;font-size:16px}
+.free li span{font-family:var(--f-mono);font-size:12px;color:var(--yolk);margin-right:8px}
+
+/* quote */
+.say{padding-top:64px;padding-bottom:8px}
+.say blockquote{margin:0;font-family:var(--f-display);font-size:clamp(1.9rem,8.6vw,3.9rem);line-height:1.28;max-width:15em}
+.say figcaption{font-family:var(--f-hand);font-size:20px;margin-top:14px;display:flex;align-items:center;gap:10px}
+.say figcaption::before{content:"";width:44px;height:2px;background:var(--ink)}
+
+/* visit */
+.visit{padding-top:64px;padding-bottom:72px}
+.visit-grid{display:grid;gap:34px;margin-top:26px}
+.map{background:var(--rice);border:var(--rule);transform:rotate(-1.1deg);box-shadow:6px 6px 0 var(--ink)}
+.map svg{display:block;width:100%;height:auto}
+.map text{font-family:var(--f-hand);fill:var(--ink)}
+.steps{margin-top:22px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2.1rem 1fr;padding:9px 0;border-bottom:1px solid var(--ink);font-size:16px;line-height:1.55}
+.steps li::before{content:"0" counter(s);font-family:var(--f-mono);font-size:12px;font-weight:500;padding-top:5px}
+.addr{font-weight:600;font-size:18px;line-height:1.55}
+.addr small{display:block;font-weight:400;font-size:16px;color:var(--ink-soft)}
+.hours{width:100%;border-collapse:collapse;margin-top:18px;border-top:var(--rule);font-size:16px}
+.hours th,.hours td{text-align:left;font-weight:500;padding:8px 10px;border-bottom:1px solid var(--ink)}
+.hours td{text-align:right;font-family:var(--f-mono);font-size:14px}
+.hours tr.off td{font-family:var(--f-body);font-size:16px}
+.hours tr.today th,.hours tr.today td{background:var(--ink);color:var(--yolk);font-weight:700}
+.hours tr.today th::after{content:"วันนี้";font-family:var(--f-hand);font-weight:400;margin-left:10px;color:var(--rice)}
+
+/* foot */
+.foot{background:var(--ink);color:var(--rice);padding-top:40px;padding-bottom:calc(92px + env(safe-area-inset-bottom));overflow:hidden}
+.big{font-family:var(--f-display);color:var(--yolk);font-size:min(17.4vw,13rem);line-height:1.1;white-space:nowrap;margin-left:-.04em}
+.foot-grid{display:grid;gap:22px;margin-top:22px;font-size:15px;line-height:1.65}
+.foot-grid b{color:var(--yolk);font-weight:600;display:block}
+.by{border:2px solid var(--yolk);padding:16px}
+.by p{font-size:15px}
+.by .btn{margin-top:12px;background:var(--yolk);color:var(--ink);border-color:var(--yolk)}
+.by .btn:hover{box-shadow:4px 4px 0 var(--rice)}
+
+/* dock (phone) */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);background:var(--ink);border-top:2px solid var(--yolk);padding-bottom:env(safe-area-inset-bottom)}
+.dock button{font:inherit;font-weight:700;font-size:16px;line-height:1.2;color:var(--yolk);background:transparent;border:0;border-left:1px solid rgba(244,180,26,.5);padding:15px 4px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border-radius:0}
+.dock button:first-child{border-left:0}
+.dock svg{width:18px;height:18px}
+.dock button:focus-visible{outline-offset:-5px}
+
+/* dialog */
+.ml dialog{font-family:var(--f-body);border:var(--rule);border-radius:0;background:var(--rice);color:var(--ink);padding:22px;max-width:min(22rem,calc(100vw - 32px));box-shadow:8px 8px 0 var(--ink)}
+.ml dialog::backdrop{background:rgba(23,19,12,.6)}
+.ml dialog h2{font-size:26px}
+.ml dialog p{margin:8px 0 16px;font-size:16px;line-height:1.6}
+
+@media (min-width:600px){
+  .hero-photo img{aspect-ratio:16/11}
+  .jars img{aspect-ratio:16/10}
+  .drinks{grid-template-columns:1fr 150px}
+  .free ul{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:900px){
+  .ml{font-size:18px}
+  .foot{padding-bottom:36px}
+  .dock{display:none}
+  .nav{display:flex;gap:26px;font-weight:600;font-size:16px}
+  .nav a{text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+  .nav a:hover{border-bottom-color:var(--ink)}
+  .mark span{font-size:30px}
+  .hero{padding-top:52px}
+  .hero .wrap{display:grid;grid-template-columns:repeat(12,1fr);column-gap:24px}
+  .hero-text{grid-column:1/8;grid-row:1}
+  .hero-photo{grid-column:8/13;grid-row:1/3;margin:0;align-self:start}
+  .hero-photo img{aspect-ratio:1/1;object-position:62% 50%}
+  .stamp{left:-70px;right:auto;top:auto;bottom:48px;width:156px;height:156px}
+  .stamp small{font-size:15px}.stamp strong{font-size:56px}
+  .facts{grid-column:1/8;grid-row:2;align-self:end;margin-top:40px}
+  .facts b{font-size:26px}
+  .lede{font-size:20px;max-width:26em}
+  .menu{padding-top:104px}
+  .menu-grid{display:grid;grid-template-columns:7fr 5fr;column-gap:56px;align-items:start}
+  .menu-list{grid-column:1;grid-row:1}
+  .pair{grid-column:2;grid-row:1;position:sticky;top:24px;margin:34px 0 0;grid-template-columns:1fr;gap:26px}
+  .pair figure:last-child{margin-top:0;width:68%;margin-left:auto}
+  .pair figure:last-child img{border-right:var(--rule);aspect-ratio:auto}
+  .dish-name{font-size:22px}.price{font-size:34px}
+  .drinks{grid-template-columns:1fr 170px;gap:28px}
+  .dark{margin-top:104px;padding-top:88px}
+  .dark-grid{display:grid;grid-template-columns:5fr 7fr;column-gap:56px;align-items:start}
+  .jars{margin-top:0}
+  .jars img{aspect-ratio:auto}
+  .free{padding-top:40px;padding-bottom:88px}
+  .say{padding-top:104px}
+  .say blockquote{text-indent:-.42em}
+  .visit{padding-top:104px;padding-bottom:112px}
+  .visit-grid{grid-template-columns:6fr 5fr;column-gap:72px;align-items:start}
+  .foot-grid{grid-template-columns:1fr 1fr 1.4fr;column-gap:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .stamp{animation:none}
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="ml" lang="th">
+
+<aside class="sample" aria-label="หมายเหตุเว็บตัวอย่าง"><div class="wrap"><b>เว็บตัวอย่างจาก SabaiKit</b> · ร้าน เมนู และราคาในหน้านี้สมมติขึ้นทั้งหมด</div></aside>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="หม้อเหลือง หน้าแรก">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6.5 15.5h27l-1.6 14.2c-.4 3.2-3 5.3-6.2 5.3H14.3c-3.2 0-5.800-2.100-6.200-5.300z" fill="#17130C"/><path d="M3 15.500h34" stroke="#17130C" stroke-width="3.200" stroke-linecap="round"/><path d="M14 10.500c-1.800-2.200 1.800-3.600 0-6M20.500 10.500c-1.800-2.200 1.800-3.600 0-6M27 10.500c-1.800-2.200 1.800-3.600 0-6" fill="none" stroke="#17130C" stroke-width="2.200" stroke-linecap="round"/></svg>
+      <span>หม้อเหลือง</span>
+    </a>
+    <nav class="nav" aria-label="เมนูหลัก"><a href="#menu">เมนูและราคา</a><a href="#own">ปรุงเอง</a><a href="#visit">มาร้านยังไง</a></nav>
+    <p class="status" id="status"><b><i aria-hidden="true"></i><em style="font-style:normal">เปิดทุกวัน เว้นพุธ</em></b><span>09:00 ถึง 15:00</span></p>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="kicker">ข้าวซอยเชียงใหม่ ซอยร่มไม้ 5</p>
+      <h1><span>หมดหม้อ</span><span>แล้วปิดร้าน</span></h1>
+      <p class="lede">เคี่ยวน้ำแกงเองตั้งแต่ตีสี่ วันละหม้อเดียว เปิดเก้าโมง ส่วนใหญ่หมดก่อนบ่ายสอง <em>มาสายอาจได้กินแต่ชาเย็น</em></p>
+      <div class="acts">
+        <a class="btn" href="#menu">ดูเมนูและราคา <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13M4.500 11l5.500 5.500 5.500-5.500" fill="none" stroke="currentColor" stroke-width="2.400"/></svg></a>
+        <button class="btn ghost" type="button" data-demo="call">โทรถามว่ายังเหลือไหม</button>
+      </div>
+    </div>
+    <figure class="hero-photo">
+      <picture>
+        <source media="(min-width:600px) and (max-width:899px)" srcset="img/soi-l.jpg">
+        <img src="img/soi-p.jpg" width="1040" height="912" alt="ข้าวซอยไก่หนึ่งชาม โรยหมี่กรอบ วางบนถาดไม้พร้อมผักกาดดอง หอมแดง มะนาว และพริกเผา" fetchpriority="high">
+      </picture>
+      <div class="stamp" aria-hidden="true"><div><small>ข้าวซอยไก่</small><strong>60.-</strong><small>ราคาเดียว</small></div></div>
+    </figure>
+    <ul class="facts" aria-label="ข้อมูลร้านโดยย่อ">
+      <li><span>เปิด</span><b>09–15 น.</b></li>
+      <li><span>หยุด</span><b>วันพุธ</b></li>
+      <li><span>จอดรถ</span><b>6 คัน</b></li>
+    </ul>
+  </div>
+</section>
+
+<section class="menu" id="menu" aria-labelledby="menu-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="menu-h">เมนูมีเท่านี้</h2>
+      <p>ทำน้อยอย่าง จะได้ทำให้ดีทุกชาม ราคารวมทุกอย่างแล้ว</p>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-list">
+        <div class="group">
+          <h3>ข้าวซอยและขนมจีน <small>4 อย่าง</small></h3>
+          <ul>
+            <li class="dish"><span class="no">01</span><div><p class="dish-name">ข้าวซอยไก่<span class="heatmark" role="img" aria-label="เผ็ดกลาง"><i class="on"></i><i class="on"></i><i></i></span></p><p class="dish-note">น่องไก่ตุ๋นจนเปื่อย น้ำแกงข้น หมี่กรอบโรยหน้า</p></div><span class="price">60<small>.-</small></span></li>
+            <li class="dish"><span class="no">02</span><div><p class="dish-name">ข้าวซอยเนื้อ<span class="heatmark" role="img" aria-label="เผ็ดกลาง"><i class="on"></i><i class="on"></i><i></i></span></p><p class="dish-note">เนื้อน่องลายตุ๋นสี่ชั่วโมง ตักด้วยช้อนก็ขาด</p></div><span class="price">75<small>.-</small></span></li>
+            <li class="dish"><span class="no">03</span><div><p class="dish-name">น้ำเงี้ยวเต้าหู้<span class="veg">เจ</span></p><p class="dish-note">ขนมจีนกับเต้าหู้ทอด น้ำแกงหม้อแยก ไม่ใส่กะปิ</p></div><span class="price">55<small>.-</small></span></li>
+            <li class="dish"><span class="no">04</span><div><p class="dish-name">น้ำเงี้ยวซี่โครง<span class="heatmark" role="img" aria-label="เผ็ดน้อย"><i class="on"></i><i></i><i></i></span></p><p class="dish-note">ขนมจีน ซี่โครงหมู มะเขือเทศ ดอกงิ้ว กินกับผักสด</p></div><span class="price">55<small>.-</small></span></li>
+          </ul>
+          <p class="legend"><span class="heatmark" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span> จุดแดงคือความเผ็ดปกติของชามนั้น ปรับได้ตอนสั่ง</p>
+          <p class="extra"><b>พิเศษ</b> +15 &nbsp;·&nbsp; <b>เพิ่มหมี่กรอบ</b> +10 &nbsp;·&nbsp; ใส่กล่องกลับบ้านไม่คิดเพิ่ม</p>
+        </div>
+        <div class="group">
+          <h3>กินเล่นระหว่างรอ <small>2 อย่าง</small></h3>
+          <ul>
+            <li class="dish"><span class="no">05</span><div><p class="dish-name">ไส้อั่วย่าง</p><p class="dish-note">ย่างเตาถ่านหน้าร้าน หั่นมาหนึ่งจาน</p></div><span class="price">70<small>.-</small></span></li>
+            <li class="dish"><span class="no">06</span><div><p class="dish-name">แคบหมู <span class="nb">น้ำพริกหนุ่ม</span></p><p class="dish-note">น้ำพริกตำเองทุกเช้า</p></div><span class="price">60<small>.-</small></span></li>
+          </ul>
+        </div>
+        <div class="group">
+          <h3>เครื่องดื่ม <small>3 อย่าง</small></h3>
+          <div class="drinks">
+            <ul>
+              <li class="dish"><span class="no">07</span><div><p class="dish-name">ชาไทยเย็น</p><p class="dish-note">ชงแก้วต่อแก้ว หวานน้อยได้</p></div><span class="price">35<small>.-</small></span></li>
+              <li class="dish"><span class="no">08</span><div><p class="dish-name">น้ำลำไย</p></div><span class="price">25<small>.-</small></span></li>
+              <li class="dish"><span class="no">09</span><div><p class="dish-name">น้ำเปล่า</p></div><span class="price">10<small>.-</small></span></li>
+            </ul>
+            <figure><img src="img/tea.jpg" width="800" height="1029" loading="lazy" alt="ชาไทยเย็นหนึ่งแก้ว ฟองนมด้านบน วางบนโต๊ะไม้"></figure>
+          </div>
+        </div>
+      </div>
+      <div class="pair">
+        <figure><img src="img/board.jpg" width="1000" height="1039" loading="lazy" alt="ขนมจีนน้ำเงี้ยวใส่เต้าหู้ทอดในชามขาว วางบนเขียงไม้ มองจากด้านบน"><figcaption class="cap"><b>03</b>น้ำเงี้ยวเต้าหู้ หม้อแยก</figcaption></figure>
+        <figure><img src="img/pork.jpg" width="1100" height="982" loading="lazy" alt="น้ำเงี้ยวใส่หมู โรยผักสด ในชามขาว"><figcaption class="cap"><b>04</b>น้ำเงี้ยวซี่โครง</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dark" id="own" aria-labelledby="own-h">
+  <div class="wrap dark-grid">
+    <div>
+      <h2 id="own-h">เผ็ดแค่ไหนดี</h2>
+      <p class="lead">น้ำแกงทุกชามเริ่มที่ไม่เผ็ด แล้วเติมพริกเผาตามที่สั่ง ลองกดดูว่าระดับไหนเป็นของคุณ</p>
+      <div class="seg" role="group" aria-label="เลือกระดับความเผ็ด">
+        <button type="button" data-heat="0" aria-pressed="false">ไม่เผ็ด</button>
+        <button type="button" data-heat="1" aria-pressed="false">น้อย</button>
+        <button type="button" data-heat="2" aria-pressed="true">กลาง</button>
+        <button type="button" data-heat="3" aria-pressed="false">คนเมือง</button>
+      </div>
+      <div class="heat-out" id="heat-out" aria-live="polite">
+        <div class="lvl" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div>
+        <strong>พริกเผาหนึ่งช้อนพูน</strong>
+        <p>กำลังดี เหงื่อซึมนิดหน่อย ตอนสั่งพูดว่า <q><span class="nb">ข้าวซอยไก่</span> เผ็ดกลาง</q></p>
+      </div>
+    </div>
+    <figure class="jars">
+      <picture>
+        <source media="(min-width:600px)" srcset="img/jars-l.jpg">
+        <img src="img/jars-p.jpg" width="960" height="1153" loading="lazy" alt="ถาดเครื่องปรุงบนโต๊ะ มีโถพริกเผา ผักดอง ผักชี และตะเกียบ">
+      </picture>
+    </figure>
+  </div>
+  <div class="wrap free">
+    <h3>เครื่องเคียง เติมเองได้ ไม่คิดเงิน</h3>
+    <ul>
+      <li><span>a</span>ผักกาดดอง</li>
+      <li><span>b</span>หอมแดงซอย</li>
+      <li><span>c</span>มะนาวผ่าซีก</li>
+      <li><span>d</span>พริกเผาคั่วเอง</li>
+      <li><span>e</span>ถั่วงอกลวก</li>
+      <li><span>f</span>ผักชี ต้นหอม</li>
+    </ul>
+  </div>
+</section>
+
+<section class="say">
+  <figure class="wrap">
+    <blockquote>“หม้อมีใบเดียว เลยไม่เคยคิดเปิดสาขา”</blockquote>
+    <figcaption>ป้าคำหล้า คนเคี่ยวแกง</figcaption>
+  </figure>
+</section>
+
+<section class="visit" id="visit" aria-labelledby="visit-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="visit-h">มาร้านยังไง</h2>
+      <p>อยู่ในซอย หาไม่ยาก ดูแผนที่ที่ป้าวาดให้</p>
+    </div>
+    <div class="visit-grid">
+      <div>
+        <div class="map">
+          <svg viewBox="0 0 360 290" role="img" aria-label="แผนที่วาดมือ จากถนนเลียบคลอง เลี้ยวเข้าซอยร่มไม้ 5 เดินประมาณ 80 ก้าว ร้านอยู่ขวามือ ตรงข้ามร้านซักรีด">
+            <path d="M-4 236c60-5 120 3 190-1s120-6 180-2" fill="none" stroke="#DF9F0B" stroke-width="30"/>
+            <path d="M-4 236c60-5 120 3 190-1s120-6 180-2" fill="none" stroke="#17130C" stroke-width="2" stroke-dasharray="12 10"/>
+            <path d="M150 222c-3-50 6-90 1-140s3-60 2-90" fill="none" stroke="#DF9F0B" stroke-width="20"/>
+            <path d="M-4 268c40-6 70 5 100 0s60 6 96 1 70-7 100-2 50-4 72 0" fill="none" stroke="#17130C" stroke-width="1.600" opacity=".55"/>
+            <path d="M-4 276c40-6 70 5 100 0s60 6 96 1 70-7 100-2 50-4 72 0" fill="none" stroke="#17130C" stroke-width="1.600" opacity=".55"/>
+            <text x="250" y="281" font-size="13" opacity=".8">คลอง</text>
+            <text x="16" y="212" font-size="15">ถนนเลียบคลอง</text>
+            <text x="146" y="20" font-size="14" transform="rotate(90 146 20)">ซอยร่มไม้ 5</text>
+            <path d="M152 214c-2-30 4-70 2-104" fill="none" stroke="#17130C" stroke-width="2.400" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <rect x="72" y="92" width="58" height="36" fill="none" stroke="#17130C" stroke-width="2" transform="rotate(-2 100 110)"/>
+            <text x="78" y="115" font-size="13">ร้านซักรีด</text>
+            <rect x="176" y="180" width="46" height="30" fill="none" stroke="#17130C" stroke-width="2" transform="rotate(1.500 199 195)"/>
+            <text x="181" y="200" font-size="12">ศาลาไม้</text>
+            <circle cx="186" cy="104" r="13" fill="#B8231A"/>
+            <circle cx="186" cy="104" r="4.500" fill="#FFF7E0"/>
+            <path d="M262 74c-22 2-42 10-58 22M214 87l-11 10 14 2" fill="none" stroke="#17130C" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="238" y="62" font-size="19">หม้อเหลือง</text>
+            <text x="246" y="124" font-size="13">ป้ายเหลืองหน้าร้าน</text>
+            <text x="34" y="168" font-size="13">เดิน 80 ก้าว</text>
+            <path d="M112 164c12 2 22 0 32-6" fill="none" stroke="#17130C" stroke-width="1.800" stroke-linecap="round"/>
+            <path d="M318 196v-34M318 162l-7 10M318 162l7 10" fill="none" stroke="#17130C" stroke-width="2" stroke-linecap="round"/>
+            <text x="312" y="212" font-size="13">น</text>
+          </svg>
+        </div>
+        <ol class="steps">
+          <li>มาตามถนนเลียบคลอง เห็นศาลาไม้ปากซอยให้ชะลอ</li>
+          <li>เลี้ยวเข้าซอยร่มไม้ 5 เดินหรือขับเข้ามาราว 80 ก้าว</li>
+          <li>ร้านอยู่ขวามือ ป้ายเหลือง ตรงข้ามร้านซักรีด จอดรถหน้าร้านได้ 6 คัน</li>
+        </ol>
+      </div>
+      <div>
+        <p class="addr">12 ซอยร่มไม้ 5 ถนนเลียบคลอง อ.เมือง เชียงใหม่<small>โทร 053 000 000 · LINE ของร้าน (เบอร์และไลน์ตัวอย่าง)</small></p>
+        <table class="hours" id="hours">
+          <caption class="mono" style="text-align:left;font-size:12px;padding-bottom:6px">เวลาเปิดร้าน</caption>
+          <tbody>
+            <tr data-d="1"><th scope="row">จันทร์</th><td>09:00–15:00</td></tr>
+            <tr data-d="2"><th scope="row">อังคาร</th><td>09:00–15:00</td></tr>
+            <tr data-d="3" class="off"><th scope="row">พุธ</th><td>หยุด ไปจ่ายตลาด</td></tr>
+            <tr data-d="4"><th scope="row">พฤหัสบดี</th><td>09:00–15:00</td></tr>
+            <tr data-d="5"><th scope="row">ศุกร์</th><td>09:00–15:00</td></tr>
+            <tr data-d="6"><th scope="row">เสาร์</th><td>09:00–15:00</td></tr>
+            <tr data-d="0"><th scope="row">อาทิตย์</th><td>09:00–15:00</td></tr>
+          </tbody>
+        </table>
+        <div class="acts">
+          <button class="btn" type="button" data-demo="map">เปิดใน Google Maps</button>
+          <button class="btn ghost" type="button" data-demo="line">ทัก LINE ร้าน</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="big" aria-hidden="true">หม้อเหลือง</p>
+    <div class="foot-grid">
+      <p><b>หม้อเหลือง ข้าวซอยเชียงใหม่</b>12 ซอยร่มไม้ 5 ถนนเลียบคลอง<br>เปิด 09:00–15:00 หยุดวันพุธ<br>หมดหม้อแล้วปิดก่อนเวลา</p>
+      <p><b>รูปถ่ายจาก Unsplash</b>ข้าวซอย: 8-Low Ural<br>น้ำเงี้ยวเต้าหู้: Mae Mu · น้ำเงี้ยวซี่โครง: JANG'S<br>เครื่องปรุง 2 รูป: Zoshua Colah · ชาไทย: Markus Winkler</p>
+      <div class="by">
+        <p><b>นี่คือเว็บตัวอย่างจาก SabaiKit ครับ</b>ร้านหม้อเหลือง ป้าคำหล้า เมนู ราคา ที่อยู่ และเบอร์โทร สมมติขึ้นทั้งหมดเพื่อให้เห็นงานออกแบบ เว็บของร้านจริงจะใช้รูปและข้อมูลของร้านคุณ</p>
+        <a class="btn" href="https://abcplease.github.io/sabaikit/">ดูตัวอย่างเว็บอื่นของ SabaiKit</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="ติดต่อร้าน">
+  <button type="button" data-demo="call"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3h3.500l1.500 4-2 1.500c1 2.200 2.300 3.500 4.500 4.500l1.500-2 4 1.500V16c0 .600-.400 1-1 1C9.500 17 3 10.500 3 4c0-.600.400-1 1-1z" fill="currentColor"/></svg>โทร</button>
+  <button type="button" data-demo="line">LINE</button>
+  <button type="button" data-demo="map"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18s6-5.600 6-10a6 6 0 10-12 0c0 4.400 6 10 6 10z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="8" r="2" fill="currentColor"/></svg>แผนที่</button>
+</nav>
+
+<dialog id="demo" aria-labelledby="demo-h">
+  <h2 id="demo-h">เว็บตัวอย่างครับ</h2>
+  <p id="demo-p"></p>
+  <form method="dialog"><button class="btn" autofocus>เข้าใจแล้ว</button></form>
+</dialog>
+
+</div>
+
+<script>
+(function(){
+  var OPEN=9, CLOSE=15, OFF=3;
+  var days=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  function bkk(){
+    try{
+      var p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+      var o={};p.forEach(function(x){o[x.type]=x.value});
+      return {d:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(o.weekday),h:parseInt(o.hour,10)%24,m:parseInt(o.minute,10)};
+    }catch(e){var n=new Date();return {d:n.getDay(),h:n.getHours(),m:n.getMinutes()}}
+  }
+  var now=bkk(), st=document.getElementById('status');
+  if(st&&now.d>=0){
+    var open=now.d!==OFF&&now.h>=OPEN&&now.h<CLOSE, txt;
+    var head;
+    if(open){head='ตอนนี้เปิดอยู่';txt='ถึง 15:00 หรือจนหมดหม้อ'}
+    else{
+      var n=now.d, add=(now.d!==OFF&&now.h<OPEN)?0:1;
+      n=(now.d+add)%7; if(n===OFF){n=(n+1)%7;add++}
+      head='ตอนนี้ปิดอยู่';txt='เปิด'+(add===0?'วันนี้':add===1?'พรุ่งนี้':'วัน'+days[n])+' 09:00';
+      st.classList.add('shut');
+    }
+    st.querySelector('em').textContent=head;st.querySelector('span').textContent=txt;
+    var row=document.querySelector('#hours tr[data-d="'+now.d+'"]'); if(row)row.classList.add('today');
+  }
+
+  var heat=[
+    ['น้ำแกงล้วน ไม่เติมพริก','เด็กกินได้ หอมเครื่องแกงแต่ไม่แสบลิ้น ตอนสั่งพูดว่า <q><span class="nb">ข้าวซอยไก่</span> ไม่เผ็ด</q>'],
+    ['พริกเผาครึ่งช้อน','อุ่นคอนิดเดียว เหมาะกับคนเพิ่งหัดกินเผ็ด ตอนสั่งพูดว่า <q><span class="nb">ข้าวซอยไก่</span> เผ็ดน้อย</q>'],
+    ['พริกเผาหนึ่งช้อนพูน','กำลังดี เหงื่อซึมนิดหน่อย ตอนสั่งพูดว่า <q><span class="nb">ข้าวซอยไก่</span> เผ็ดกลาง</q>'],
+    ['สองช้อน กับพริกทอดอีกหนึ่งเม็ด','แบบที่ป้ากินเอง ขอน้ำลำไยไว้ข้างชามด้วย ตอนสั่งพูดว่า <q><span class="nb">ข้าวซอยไก่</span> เผ็ดคนเมือง</q>']
+  ];
+  var out=document.getElementById('heat-out'), btns=document.querySelectorAll('[data-heat]');
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    var k=+b.getAttribute('data-heat');
+    btns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+    var dots='';for(var i=0;i<3;i++)dots+='<i'+(i<k?' class="on"':'')+'></i>';
+    out.innerHTML='<div class="lvl" aria-hidden="true">'+dots+'</div><strong>'+heat[k][0]+'</strong><p>'+heat[k][1]+'</p>';
+  })});
+
+  var dlg=document.getElementById('demo'), dp=document.getElementById('demo-p');
+  var msg={call:'ในเว็บของร้านจริง ปุ่มนี้กดแล้วโทรออกหาร้านได้ทันที',line:'ในเว็บของร้านจริง ปุ่มนี้เปิดแชต LINE ของร้านทันที',map:'ในเว็บของร้านจริง ปุ่มนี้เปิด Google Maps นำทางมาที่ร้าน'};
+  document.querySelectorAll('[data-demo]').forEach(function(b){b.addEventListener('click',function(){
+    dp.textContent=msg[b.getAttribute('data-demo')];
+    if(dlg.showModal)dlg.showModal();else alert(dp.textContent);
+  })});
+})();
+</script>
+</body>
+</html>
