@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตัวอย่างเว็บจาก SabaiKit</title>
+<meta name="description" content="ตัวอย่างเว็บที่ SabaiKit ทำ เปิดดูบนมือถือได้เลย ร้านและข้อมูลในเว็บตัวอย่างเป็นข้อมูลสมมติ">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="ตัวอย่างเว็บจาก SabaiKit">
+<meta property="og:description" content="เซลเพจหน้าเดียว และเว็บ 4 หน้า เปิดดูบนมือถือได้เลย (ร้านตัวอย่างเป็นร้านสมมติ)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230f6b5c'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Anuphan";src:url("candle/fonts/anuphan-thai-wght-normal.woff2") format("woff2");font-weight:100 700;font-display:swap;unicode-range:U+0E01-0E5B,U+200C-200D,U+25CC}
+@font-face{font-family:"Anuphan";src:url("candle/fonts/anuphan-latin-wght-normal.woff2") format("woff2");font-weight:100 700;font-display:swap;unicode-range:U+0000-00FF,U+2013-2014,U+2018-201D,U+2022,U+2026}
+:root{--ink:#16231f;--muted:#51605a;--bg:#f6f4ee;--card:#fff;--line:#e2ded3;--accent:#0f6b5c;--accent-ink:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Anuphan","Noto Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding:32px 16px 56px}
+.eyebrow{font-size:.9rem;font-weight:600;color:var(--accent);margin:0 0 6px}
+h1{font-size:clamp(1.6rem,6vw,2.2rem);line-height:1.25;margin:0 0 10px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 24px}
+.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 14px;text-decoration:none;color:inherit}
+.card:hover,.card:focus-visible{border-color:var(--accent);outline:none}
+.card h2{font-size:1.2rem;margin:0 0 4px}
+.card p{margin:0;color:var(--muted)}
+.price{display:inline-block;margin-top:10px;font-weight:600;font-variant-numeric:tabular-nums}
+.go{display:inline-block;margin-top:12px;font-weight:600;color:var(--accent)}
+.note{font-size:.9rem;color:var(--muted);margin:22px 0}
+.btn{display:block;text-align:center;background:var(--accent);color:var(--accent-ink);font-weight:600;text-decoration:none;border-radius:14px;padding:14px 18px;min-height:48px}
+.btn:hover,.btn:focus-visible{background:#0b574b;outline:2px solid #0b574b;outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">SabaiKit สบายคิท</p>
+  <h1>ตัวอย่างเว็บที่เราทำ เปิดดูบนมือถือได้เลย</h1>
+  <p class="lead">แตะเพื่อเปิดเว็บตัวอย่าง ลองเลื่อนดูและกดปุ่มต่าง ๆ ได้ครับ</p>
+
+  <a class="card" href="candle/">
+    <h2>เซลเพจหน้าเดียว</h2>
+    <p>ร้านเทียนหอม: สินค้า ราคา วิธีสั่งซื้อ คำถามที่พบบ่อย ปุ่มทักไลน์และโทร</p>
+    <span class="price">2,500 บาท · ส่งใน 24 ชั่วโมงหลังมัดจำ</span><br>
+    <span class="go">เปิดดูตัวอย่าง →</span>
+  </a>
+
+  <a class="card" href="school/">
+    <h2>เว็บ 4 หน้า</h2>
+    <p>สถาบันกวดวิชา: หน้าแรก คอร์สเรียน ข่าวสาร ติดต่อเรา</p>
+    <span class="price">4,000 บาท · ส่งใน 2 ถึง 3 วันหลังมัดจำ</span><br>
+    <span class="go">เปิดดูตัวอย่าง →</span>
+  </a>
+
+  <p class="note">ร้านและสถาบันในเว็บตัวอย่างเป็นข้อมูลสมมติ ทำขึ้นเพื่อแสดงตัวอย่างงานเท่านั้นครับ</p>
+
+  <a class="btn" href="https://www.facebook.com/profile.php?id=61596298774791">ทักแชทเพจ SabaiKit</a>
+</main>
+</body>
+</html>
