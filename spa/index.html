@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>บ้านคราม นวดแผนไทย | เว็บตัวอย่างโดย SabaiKit</title>
+<meta name="description" content="ตัวอย่างเว็บร้านนวดหน้าเดียวจาก SabaiKit: รายการนวด ราคาและนาที เวลาเปิดร้าน วิธีจอง ปุ่ม LINE และโทร แผนที่ (ร้านและราคาเป็นข้อมูลสมมติ)">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#22304D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2322304D'/%3E%3Ccircle cx='16' cy='18' r='8' fill='%23F1EBDD'/%3E%3Cpath d='M12 10l4 4 4-4' fill='none' stroke='%23E2A43C' stroke-width='2.500'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mali:wght@500&family=Pridi:wght@500;600&family=Sarabun:wght@400;600;700&display=swap">
+<style>
+:root{
+  --khram:#22304D;     /* page ground: the indigo of the shop's clothes and curtains */
+  --khram-deep:#1A2540;/* the price panel edge, map roads */
+  --khram-soft:#33436A;/* rules on indigo */
+  --cotton:#F1EBDD;    /* text on indigo, the one light panel */
+  --cotton-dim:#C9CCD6;/* secondary text on indigo (7:1) */
+  --ink:#141B2B;       /* text on cotton */
+  --ink-soft:#46506A;  /* secondary text on cotton (6:1) */
+  --turmeric:#E2A43C;  /* accent, 3 places only: booking buttons, chosen time, today's row */
+  --f-display:'Pridi','Noto Serif Thai',serif;
+  --f-body:'Sarabun','Leelawadee UI',system-ui,sans-serif;
+  --f-hand:'Mali','Sarabun',cursive;
+  --gl:max(16px,3.6vw,env(safe-area-inset-left));
+  --gr:max(16px,3.6vw,env(safe-area-inset-right));
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--khram);color:var(--cotton)}
+.bk{font-family:var(--f-body);font-size:17px;line-height:1.7;overflow-x:clip}
+:where(.bk) img{display:block;width:100%;height:auto}
+:where(.bk) :where(h1,h2,h3,p,ul,ol,figure,table,dl,dd){margin:0;padding:0}
+:where(.bk) :where(ul,ol){list-style:none}
+:where(.bk) a{color:inherit}
+.bk h1,.bk h2,.bk h3{text-wrap:balance}
+.bk p{text-wrap:pretty}
+.wrap{max-width:1160px;margin-inline:auto;padding-left:var(--gl);padding-right:var(--gr)}
+.nb{white-space:nowrap}
+.bk :focus-visible{outline:3px solid var(--cotton);outline-offset:3px}
+.paper :focus-visible,.bk dialog :focus-visible{outline-color:var(--ink)}
+
+/* sample note */
+.sample{background:var(--cotton);color:var(--ink);font-size:14px;line-height:1.5;padding-top:7px;padding-bottom:7px}
+.sample b{font-weight:700}
+
+/* top */
+.top{border-bottom:1px solid var(--khram-soft)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:12px}
+.mark{display:flex;align-items:baseline;gap:8px;text-decoration:none;white-space:nowrap}
+.mark span{font-family:var(--f-display);font-weight:600;font-size:25px;line-height:1.25}
+.mark small{font-size:14px;color:var(--cotton-dim)}
+.nav{display:none}
+.status{font-size:14px;line-height:1.4;text-align:right;white-space:nowrap}
+.status b{font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.status i{width:9px;height:9px;border-radius:50%;background:var(--cotton);flex:none}
+.status.shut i{background:transparent;box-shadow:inset 0 0 0 2px var(--cotton-dim)}
+.status span{display:block;color:var(--cotton-dim)}
+
+/* hero */
+.hero{padding-top:30px}
+.where{font-size:15px;font-weight:600;color:var(--cotton-dim)}
+.bk h1{font-family:var(--f-display);font-weight:600;font-size:clamp(2.7rem,13.4vw,6.6rem);line-height:1.2;margin-top:8px;letter-spacing:-.01em}
+.bk h1 span{display:block;white-space:nowrap}
+.lede{margin-top:18px;font-size:18px;max-width:30em}
+.hero-photo{position:relative;margin-top:26px;margin-right:calc(-1*var(--gr))}
+.hero-photo img{aspect-ratio:3/2;object-fit:cover}
+.tag{position:absolute;left:-6px;bottom:-26px;background:var(--cotton);color:var(--ink);font-family:var(--f-hand);font-weight:500;font-size:17px;line-height:1.35;padding:10px 16px 10px 26px;transform:rotate(-4deg);box-shadow:3px 4px 0 rgba(10,14,26,.45)}
+.tag::before{content:"";position:absolute;left:9px;top:50%;width:9px;height:9px;margin-top:-4px;border-radius:50%;background:var(--khram)}
+.tag small{display:block;font-family:var(--f-body);font-size:14px;font-weight:600}
+.acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.btn{font:inherit;font-weight:700;font-size:17px;line-height:1.3;display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid var(--cotton);background:transparent;color:var(--cotton);text-decoration:none;cursor:pointer;border-radius:3px}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:hover{background:var(--cotton);color:var(--ink)}
+.btn.go{background:var(--turmeric);border-color:var(--turmeric);color:var(--ink)}
+.btn.go:hover{background:var(--cotton);border-color:var(--cotton)}
+.plain{margin-top:44px;border-top:1px solid var(--khram-soft);padding-top:12px;font-size:16px;color:var(--cotton-dim)}
+.plain b{color:var(--cotton);font-weight:600}
+
+/* price list */
+.list{padding-top:72px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:6px 24px;border-bottom:2px solid var(--cotton);padding-bottom:12px}
+.bk h2{font-family:var(--f-display);font-weight:600;font-size:clamp(2.1rem,9.6vw,4rem);line-height:1.25}
+.sec-head p{font-size:16px;max-width:21em;color:var(--cotton-dim)}
+.prices{width:100%;border-collapse:collapse;margin-top:4px}
+.prices thead th{font-size:14px;font-weight:600;color:var(--cotton-dim);text-align:right;padding:12px 0 8px 8px;white-space:nowrap}
+.prices thead th:first-child{text-align:left;padding-left:0}
+.prices tbody th{text-align:left;font-weight:400;padding:16px 8px 15px 0;vertical-align:top}
+.prices tbody tr{border-bottom:1px solid var(--khram-soft)}
+.prices .no{display:block;font-size:14px;color:var(--cotton-dim);font-weight:600}
+.svc{display:block;font-family:var(--f-display);font-weight:600;font-size:22px;line-height:1.35}
+.note{display:block;font-size:16px;line-height:1.55;color:var(--cotton-dim);margin-top:3px;max-width:24em}
+.prices td{text-align:right;vertical-align:top;padding:18px 0 15px 8px;font-family:var(--f-display);font-weight:500;font-size:22px;line-height:1.3;white-space:nowrap}
+.prices td small{font-size:14px}
+.prices td.na{color:var(--cotton-dim);font-family:var(--f-body);font-size:16px;padding-top:22px}
+@media (max-width:599px){
+  .prices thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .prices tbody tr{display:grid;grid-template-columns:repeat(3,1fr);padding:16px 0 14px}
+  .prices tbody th{grid-column:1/-1;padding:0 0 10px}
+  .prices td{text-align:left;padding:8px 0 0 10px;border-left:1px solid var(--khram-soft);font-size:22px}
+  .prices td:nth-of-type(1){border-left:0;padding-left:0}
+  .prices td::before{content:attr(data-t);display:block;font-family:var(--f-body);font-size:14px;font-weight:600;color:var(--cotton-dim);line-height:1.4}
+  .prices td.na{font-size:16px}
+  .note{max-width:none}
+}
+.addon{margin-top:14px;font-size:16px;color:var(--cotton-dim)}
+.addon b{color:var(--cotton);font-weight:600}
+.pair{display:grid;grid-template-columns:58fr 42fr;gap:12px;align-items:start;margin:34px calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
+.pair figure:last-child{margin-top:64px}
+.pair img{object-fit:cover}
+.pair figure:first-child img{aspect-ratio:5/4;object-position:30% 50%}
+.pair figure:last-child img{aspect-ratio:3/4}
+.cap{font-size:14px;line-height:1.5;color:var(--cotton-dim);margin-top:7px;padding-left:var(--gl)}
+.pair figure:last-child .cap{padding-left:0;padding-right:var(--gr)}
+
+/* package: the one light panel */
+.paper{background:var(--cotton);color:var(--ink);margin-top:56px;padding:26px 20px 24px;position:relative}
+.paper .k{font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--ink-soft)}
+.paper h3{font-family:var(--f-display);font-weight:600;font-size:clamp(1.8rem,8vw,2.6rem);line-height:1.25;margin-top:4px}
+.paper .amt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-top:8px}
+.paper .amt b{font-family:var(--f-display);font-weight:600;font-size:44px;line-height:1.1}
+.paper .amt span{font-size:16px;color:var(--ink-soft)}
+.paper ol{margin-top:16px;border-top:1px solid var(--ink);counter-reset:p}
+.paper li{counter-increment:p;display:grid;grid-template-columns:2rem 1fr auto;gap:6px;padding:10px 0;border-bottom:1px solid rgba(20,27,43,.35);font-size:16px;line-height:1.55}
+.paper li::before{content:counter(p);font-family:var(--f-display);font-weight:600}
+.paper li em{font-style:normal;color:var(--ink-soft);white-space:nowrap}
+.paper .after{margin-top:12px;font-size:16px}
+.paper .btn{margin-top:16px;border-color:var(--ink);color:var(--ink)}
+.paper .btn:hover{background:var(--ink);color:var(--cotton)}
+
+/* time chooser */
+.time{padding-top:80px}
+.time .lead{margin-top:10px;max-width:28em;color:var(--cotton-dim)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);margin-top:22px;border:2px solid var(--cotton);border-radius:3px}
+.seg button{font:inherit;font-weight:700;font-size:16px;line-height:1.3;padding:14px 2px;background:transparent;color:var(--cotton);border:0;border-left:2px solid var(--cotton);cursor:pointer;border-radius:0}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--turmeric);color:var(--ink)}
+.fit{margin-top:20px;min-height:17em}
+.fit ul{border-top:1px solid var(--khram-soft)}
+.fit li{display:grid;grid-template-columns:1fr auto;gap:8px;padding:11px 0;border-bottom:1px solid var(--khram-soft)}
+.fit li b{font-weight:600}
+.fit li span{font-family:var(--f-display);font-weight:500;font-size:20px;white-space:nowrap}
+.last{margin-top:10px;font-size:15px;color:var(--cotton-dim)}
+.msg{margin-top:12px;border:1.5px dashed var(--cotton-dim);padding:12px 14px;font-size:16px;line-height:1.6}
+.msg small{display:block;font-size:14px;color:var(--cotton-dim)}
+.time-grid figure{margin-top:30px;margin-left:calc(-1*var(--gl))}
+.time-grid figure img{aspect-ratio:4/3;object-fit:cover}
+.time-grid figure .cap{padding-left:var(--gl)}
+.hands{margin-top:22px;margin-right:calc(-1*var(--gr))}
+.hands img{aspect-ratio:16/9;object-fit:cover}
+
+/* before you come */
+.before{padding-top:80px}
+.before ol{margin-top:6px;counter-reset:b}
+.before li{counter-increment:b;display:grid;grid-template-columns:2.4rem 1fr;padding:14px 0;border-bottom:1px solid var(--khram-soft);font-size:17px}
+.before li::before{content:counter(b);font-family:var(--f-display);font-weight:600;font-size:22px;line-height:1.3}
+.before li b{display:block;font-weight:600}
+.before li span{color:var(--cotton-dim);font-size:16px}
+
+/* visit */
+.visit{padding-top:80px;padding-bottom:80px}
+.visit-grid{display:grid;gap:34px;margin-top:26px}
+.map{background:var(--cotton);transform:rotate(1deg);box-shadow:-6px 6px 0 var(--khram-deep)}
+.map svg{display:block;width:100%;height:auto}
+.map text{font-family:var(--f-hand);font-weight:500;fill:var(--ink)}
+.addr{font-weight:600;font-size:18px;line-height:1.55}
+.addr small{display:block;font-weight:400;font-size:16px;color:var(--cotton-dim);margin-top:4px}
+.hours{width:100%;border-collapse:collapse;margin-top:20px;border-top:2px solid var(--cotton);font-size:16px}
+.hours caption{text-align:left;font-size:14px;font-weight:600;color:var(--cotton-dim);padding-bottom:6px}
+.hours th,.hours td{text-align:left;font-weight:400;padding:8px 10px;border-bottom:1px solid var(--khram-soft)}
+.hours td{text-align:right;font-variant-numeric:tabular-nums}
+.hours tr.today th,.hours tr.today td{background:var(--turmeric);color:var(--ink);font-weight:700}
+.hours tr.today th::after{content:"วันนี้";font-weight:400;margin-left:10px}
+.small{font-size:15px;color:var(--cotton-dim);margin-top:12px}
+
+/* foot */
+.foot{border-top:1px solid var(--khram-soft);background:var(--khram-deep);padding-top:40px;padding-bottom:calc(96px + env(safe-area-inset-bottom));overflow:hidden}
+.big{font-family:var(--f-display);font-weight:600;font-size:min(19vw,12rem);line-height:1.15;white-space:nowrap;margin-left:-.03em}
+.foot-grid{display:grid;gap:22px;margin-top:20px;font-size:15px;line-height:1.65;color:var(--cotton-dim)}
+.foot-grid b{color:var(--cotton);font-weight:600;display:block}
+.by{border:1.5px solid var(--cotton-dim);padding:16px}
+.by .btn{margin-top:12px;font-size:16px}
+
+/* dock (phone) */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(3,1fr);background:var(--cotton);color:var(--ink);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -1px 0 var(--khram-deep)}
+.dock button{font:inherit;font-weight:700;font-size:16px;line-height:1.2;color:var(--ink);background:transparent;border:0;border-left:1px solid rgba(20,27,43,.3);padding:15px 4px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border-radius:0}
+.dock button:first-child{border-left:0}
+.dock svg{width:18px;height:18px}
+.dock button:focus-visible{outline:3px solid var(--ink);outline-offset:-5px}
+
+/* dialog */
+.bk dialog{font-family:var(--f-body);border:0;border-radius:3px;background:var(--cotton);color:var(--ink);padding:22px;max-width:min(22rem,calc(100vw - 32px));box-shadow:8px 8px 0 var(--khram-deep)}
+.bk dialog::backdrop{background:rgba(14,20,34,.7)}
+.bk dialog h2{font-size:26px}
+.bk dialog p{margin:8px 0 16px;font-size:16px;line-height:1.6}
+.bk dialog .btn{border-color:var(--ink);color:var(--ink)}
+.bk dialog .btn:hover{background:var(--ink);color:var(--cotton)}
+
+@media (max-width:379px){
+  .mark span{font-size:22px}.mark small{display:none}
+  .prices td{font-size:19px;padding-left:5px}
+  .svc{font-size:20px}
+  .seg button{font-size:15px}
+}
+@media (min-width:600px){
+  .paper{padding:32px 32px 28px;max-width:640px}
+}
+@media (min-width:900px){
+  .bk{font-size:18px}
+  .foot{padding-bottom:40px}
+  .dock{display:none}
+  .nav{display:flex;gap:26px;font-weight:600;font-size:16px}
+  .nav a{text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+  .nav a:hover{border-bottom-color:var(--cotton)}
+  .mark span{font-size:30px}
+  .hero{padding-top:56px}
+  .hero .wrap{display:grid;grid-template-columns:repeat(12,1fr);column-gap:24px}
+  .hero-text{grid-column:1/7;grid-row:1;padding-top:20px}
+  .hero-photo{grid-column:7/13;grid-row:1/3;margin:0 calc(-1*(max(0px,(100vw - 1160px)/2) + var(--gr))) 0 0;align-self:start}
+  .hero-photo img{aspect-ratio:4/5;object-position:50% 62%}
+  .tag{left:-48px;bottom:56px;font-size:19px}
+  .plain{grid-column:1/7;grid-row:2;align-self:end}
+  .lede{font-size:20px}
+  .list{padding-top:110px}
+  .list-grid{display:grid;grid-template-columns:7fr 4fr;column-gap:56px;align-items:start}
+  .pair{grid-column:2;grid-row:1/3;margin:34px 0 0;grid-template-columns:1fr;gap:28px}
+  .pair figure:last-child{margin-top:0;width:62%;margin-left:auto}
+  .cap,.pair figure:last-child .cap{padding:0}
+  .pair figure:first-child img{aspect-ratio:4/3}
+  .pair figure:last-child img{aspect-ratio:4/5}
+  .svc{font-size:25px}.prices td{font-size:26px}
+  .prices tbody th{padding-right:24px}
+  .paper{margin-top:48px}
+  .time{padding-top:120px}
+  .time-grid{display:grid;grid-template-columns:5fr 6fr;column-gap:64px;align-items:start}
+  .time-grid figure{margin:0 0 0 calc(-1*var(--gl));grid-column:1;grid-row:1}
+  .time-grid figure img{aspect-ratio:1/1;object-position:50% 60%}
+  .hands{margin:28px 0 0;width:100%}
+  .hands img{aspect-ratio:4/3}
+  .time-grid>div{grid-column:2;grid-row:1}
+  .before{padding-top:120px}
+  .before .wrap{display:grid;grid-template-columns:4fr 7fr;column-gap:64px}
+  .before .sec-head{border-bottom:0;align-items:flex-start;flex-direction:column;grid-column:1;grid-row:1}
+  .before ol{border-top:2px solid var(--cotton);margin-top:0;grid-column:2;grid-row:1/3}
+  .before .hands{grid-column:1;grid-row:2}
+  .visit{padding-top:120px;padding-bottom:120px}
+  .visit-grid{grid-template-columns:6fr 5fr;column-gap:72px;align-items:start}
+  .foot-grid{grid-template-columns:1fr 1fr 1.4fr;column-gap:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="bk" lang="th">
+
+<aside class="sample" aria-label="หมายเหตุเว็บตัวอย่าง"><div class="wrap"><b>เว็บตัวอย่างจาก SabaiKit</b> · ร้าน ราคา และเบอร์ติดต่อในหน้านี้สมมติขึ้นทั้งหมด</div></aside>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top" aria-label="บ้านคราม นวดแผนไทย หน้าแรก"><span>บ้านคราม</span><small>นวดแผนไทย</small></a>
+    <nav class="nav" aria-label="เมนูหลัก"><a href="#list">นวดอะไรได้บ้าง</a><a href="#time">มีเวลาเท่าไหร่</a><a href="#visit">มาร้านยังไง</a></nav>
+    <p class="status" id="status"><b><i aria-hidden="true"></i><em style="font-style:normal">เปิดทุกวัน เว้นอังคาร</em></b><span>10:00 ถึง 21:00</span></p>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="where">นวดแผนไทย ซอยตลาดเช้า 4 นนทบุรี</p>
+      <h1><span>ลูกประคบ</span><span>นึ่งใหม่</span><span>ทุกเช้า</span></h1>
+      <p class="lede">เก้าโมงเช้าเรานึ่งไพล ขมิ้น ตะไคร้ ใบมะขาม ห่อผ้าดิบใหม่ทุกวัน เปิดประตูร้านมาก็ได้กลิ่นแล้ว ลูกที่ใช้กับคุณ ห่อให้กลับไปนึ่งต่อที่บ้านได้อีกสองครั้ง</p>
+      <div class="acts">
+        <button class="btn go" type="button" data-demo="line"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.500c-4.400 0-8 2.800-8 6.300 0 2.100 1.300 4 3.300 5.100l-.5 3 3.300-2c.6.1 1.200.2 1.900.2 4.400 0 8-2.800 8-6.300S14.400 2.500 10 2.500z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>ทัก LINE ถามคิววันนี้</button>
+        <a class="btn" href="#list">ดูราคานวด</a>
+      </div>
+    </div>
+    <figure class="hero-photo">
+      <picture>
+        <source media="(min-width:900px)" srcset="img/herbs-p.jpg" width="1000" height="1500">
+        <img src="img/herbs-l.jpg" width="1400" height="933" alt="ขมิ้นสดทั้งเหง้า ขมิ้นแห้ง และผงขมิ้น วางเรียงบนโต๊ะไม้ เป็นของที่ห่อในลูกประคบ" fetchpriority="high">
+      </picture>
+      <p class="tag" aria-hidden="true">นึ่ง 09:00 ใช้วันนี้<small>ลูกละหนึ่งคน ไม่ใช้ซ้ำ</small></p>
+    </figure>
+    <p class="plain"><b>เปิด 10:00–21:00</b> · หยุดวันอังคาร · ห้าเบาะ สองเก้าอี้นวดเท้า · จอดรถในลานวัดกลาง เดินสองนาที</p>
+  </div>
+</section>
+
+<section class="list" id="list" aria-labelledby="list-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="list-h">นวดอะไรได้บ้าง</h2>
+      <p>ราคาต่อคน รวมชุดเปลี่ยน ผ้าเช็ดตัว และชาขิงหลังนวดแล้ว</p>
+    </div>
+    <div class="list-grid">
+      <div>
+        <table class="prices">
+          <caption class="nb" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">ราคานวดตามเวลา เป็นบาท</caption>
+          <thead><tr><th scope="col">นวด</th><th scope="col">1 ชม.</th><th scope="col">1½ ชม.</th><th scope="col">2 ชม.</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><span class="no">01</span><span class="svc">นวดแผนไทย</span><span class="note">ใส่ชุดครามของร้าน ไม่ใช้น้ำมัน กดและยืดตามเส้น บอกแรงเบาได้ตลอด</span></th><td data-t="1 ชม.">250<small>.-</small></td><td data-t="1½ ชม.">350<small>.-</small></td><td data-t="2 ชม.">450<small>.-</small></td></tr>
+            <tr><th scope="row"><span class="no">02</span><span class="svc">นวดเท้า</span><span class="note">แช่น้ำอุ่นใส่เกลือก่อนทุกครั้ง นั่งเก้าอี้เอน นวดถึงหัวเข่า</span></th><td data-t="1 ชม.">250<small>.-</small></td><td data-t="1½ ชม.">350<small>.-</small></td><td class="na" data-t="2 ชม.">ไม่มี</td></tr>
+            <tr><th scope="row"><span class="no">03</span><span class="svc">นวดน้ำมัน</span><span class="note">น้ำมันมะพร้าวกับตะไคร้ ห้องส่วนตัว มีห้องอาบน้ำหลังนวด</span></th><td data-t="1 ชม.">400<small>.-</small></td><td data-t="1½ ชม.">550<small>.-</small></td><td data-t="2 ชม.">700<small>.-</small></td></tr>
+            <tr><th scope="row"><span class="no">04</span><span class="svc">นวดไทยกับลูกประคบ</span><span class="note">นวดไทยก่อน แล้วประคบร้อนตามหลังที่ไหล่และขา ลูกประคบห่อกลับบ้านได้</span></th><td class="na" data-t="1 ชม.">ไม่มี</td><td data-t="1½ ชม.">500<small>.-</small></td><td data-t="2 ชม.">650<small>.-</small></td></tr>
+          </tbody>
+        </table>
+        <p class="addon"><b>เพิ่มได้</b> นวดคอ บ่า ไหล่ 30 นาที 150.- · ลูกประคบซื้อกลับบ้าน ลูกละ 80.-</p>
+
+        <div class="paper" id="set">
+          <p class="k">ชุดเดียวของร้าน</p>
+          <h3>เท้าก่อน ตัวทีหลัง</h3>
+          <p class="amt"><b>690.-</b><span>2 ชั่วโมงครึ่ง · ถ้าแยกจ่าย 750.-</span></p>
+          <ol>
+            <li>แช่เท้าน้ำอุ่น แล้วนวดเท้า<em>60 นาที</em></li>
+            <li>เปลี่ยนชุดคราม นวดไทยกับลูกประคบ<em>90 นาที</em></li>
+            <li>ชาขิงอุ่น นั่งพักก่อนกลับ<em>ไม่รีบ</em></li>
+          </ol>
+          <p class="after">ลูกประคบลูกที่ใช้ห่อผ้าให้กลับบ้าน วันเสาร์อาทิตย์จองก่อนหนึ่งวัน จะมีคิวให้เลือกมากกว่าครับ</p>
+          <button class="btn" type="button" data-demo="line">จองชุดนี้ทาง LINE</button>
+        </div>
+      </div>
+      <div class="pair">
+        <figure><img src="img/footrub.jpg" width="1000" height="667" loading="lazy" alt="มือหมอนวดกดฝ่าเท้าลูกค้าที่นอนห่มผ้าอยู่บนเตียง"><figcaption class="cap">02 นวดเท้า นวดถึงหัวเข่า</figcaption></figure>
+        <figure><img src="img/towels.jpg" width="800" height="1161" loading="lazy" alt="ผ้าขนหนูลายทางสีครามสลับขาว พับซ้อนกันเป็นตั้ง"><figcaption class="cap">ผ้าซักใหม่ทุกคน</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="time" id="time" aria-labelledby="time-h">
+  <div class="wrap time-grid">
+    <div>
+      <h2 id="time-h">มีเวลาเท่าไหร่</h2>
+      <p class="lead">กดเวลาที่มี แล้วดูว่านวดอะไรได้บ้าง ราคาเท่าไหร่ ส่งข้อความนี้ทาง LINE ได้เลยครับ</p>
+      <div class="seg" role="group" aria-label="เลือกเวลาที่มี">
+        <button type="button" data-t="0" aria-pressed="true">1 ชม.</button>
+        <button type="button" data-t="1" aria-pressed="false">1½ ชม.</button>
+        <button type="button" data-t="2" aria-pressed="false">2 ชม.</button>
+        <button type="button" data-t="3" aria-pressed="false">2½ ชม.</button>
+      </div>
+      <div class="fit" id="fit" aria-live="polite"></div>
+      <div class="acts"><button class="btn go" type="button" data-demo="line">ส่งข้อความนี้ทาง LINE</button></div>
+    </div>
+    <figure><img src="img/soak.jpg" width="1400" height="933" loading="lazy" alt="อ่างแช่เท้าสีครามใส่หินกับน้ำอุ่น วางหน้าเก้าอี้ ข้างรองเท้าแตะสาน และม้านั่งไม้เตี้ย"><figcaption class="cap">แช่เท้าก่อนทุกครั้ง ทุกแบบที่นวด</figcaption></figure>
+  </div>
+</section>
+
+<section class="before" aria-labelledby="before-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="before-h">ก่อนมาร้าน</h2>
+      <p>สี่เรื่องที่คนมาครั้งแรกถามบ่อย</p>
+    </div>
+    <ol>
+      <li><div><b>ใส่ชุดอะไรมาก็ได้</b><span>ร้านมีเสื้อกางเกงม่อฮ่อมซักใหม่ให้เปลี่ยน มีล็อกเกอร์ใส่กระเป๋ากับโทรศัพท์</span></div></li>
+      <li><div><b>มาก่อนเวลาสิบนาที</b><span>ได้เปลี่ยนชุดกับแช่เท้าก่อน เวลานวดจะได้ไม่ถูกตัด</span></div></li>
+      <li><div><b>แรงไปเบาไป บอกได้เลย</b><span>หมอนวดถามก่อนเริ่ม และถามอีกครั้งตอนเปลี่ยนท่า</span></div></li>
+      <li><div><b>ยกเลิกบอกก่อนหนึ่งชั่วโมง</b><span>ไม่เสียเงิน จ่ายหลังนวดด้วยเงินสดหรือสแกนพร้อมเพย์</span></div></li>
+    </ol>
+    <figure class="hands"><img src="img/hands.jpg" width="1100" height="733" loading="lazy" alt="มือหมอนวดสองข้างกดฝ่ามือลูกค้าบนเบาะผ้าสีน้ำตาลอ่อน"></figure>
+  </div>
+</section>
+
+<section class="visit" id="visit" aria-labelledby="visit-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="visit-h">มาร้านยังไง</h2>
+      <p>ห้องแถวม่านคราม ตรงข้ามร้านขายยา</p>
+    </div>
+    <div class="visit-grid">
+      <div>
+        <div class="map">
+          <svg viewBox="0 0 360 290" role="img" aria-label="แผนที่วาดมือ จากถนนวัดกลาง เลี้ยวเข้าซอยตลาดเช้า 4 เดินราว 60 ก้าว ร้านอยู่ซ้ายมือ ห้องแถวห้องที่สาม ตรงข้ามร้านขายยา จอดรถในลานวัดกลางที่ปากซอย">
+            <path d="M70 -4c4 60-3 120 1 180s-2 80 1 118" fill="none" stroke="#C9CCD6" stroke-width="32"/>
+            <path d="M84 150c60-3 120 3 180-1s70 2 100 0" fill="none" stroke="#C9CCD6" stroke-width="24"/>
+            <text x="76" y="282" font-size="15" transform="rotate(-90 76 282)">ถนนวัดกลาง</text>
+            <text x="252" y="155" font-size="14">ซอยตลาดเช้า 4</text>
+            <rect x="148" y="102" width="34" height="34" fill="none" stroke="#141B2B" stroke-width="1.600"/>
+            <rect x="184" y="102" width="34" height="34" fill="none" stroke="#141B2B" stroke-width="1.600"/>
+            <rect x="220" y="102" width="34" height="34" fill="#22304D"/>
+            <rect x="256" y="102" width="34" height="34" fill="none" stroke="#141B2B" stroke-width="1.600"/>
+            <path d="M96 151c40 1 90-1 140 0" fill="none" stroke="#141B2B" stroke-width="2.400" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <path d="M232 151l6 -9 6 9" fill="none" stroke="#141B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="98" y="179" font-size="14">60 ก้าว</text>
+            <text x="166" y="34" font-size="20">บ้านคราม</text>
+            <text x="166" y="55" font-size="14">ห้องที่สาม ม่านคราม</text>
+            <path d="M262 58c-6 14-14 26-22 38M232 88l7 9 4-11" fill="none" stroke="#141B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="102" y="194" width="108" height="66" fill="none" stroke="#141B2B" stroke-width="2" transform="rotate(-1.500 156 227)"/>
+            <path d="M118 210l10-8 10 8M150 210l10-8 10 8" fill="none" stroke="#141B2B" stroke-width="1.600"/>
+            <text x="114" y="232" font-size="14">วัดกลาง</text>
+            <text x="112" y="251" font-size="14">จอดรถในลาน</text>
+            <rect x="222" y="176" width="92" height="34" fill="none" stroke="#141B2B" stroke-width="2" transform="rotate(1.500 268 193)"/>
+            <text x="231" y="199" font-size="14">ร้านขายยา</text>
+            <path d="M30 76v-38M30 38l-7 10M30 38l7 10" fill="none" stroke="#141B2B" stroke-width="2" stroke-linecap="round"/>
+            <text x="25" y="95" font-size="14">น</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <p class="addr">27 ซอยตลาดเช้า 4 ถนนวัดกลาง อ.เมือง นนทบุรี<small>โทร 02 000 0000 · LINE ของร้าน (เบอร์และไลน์ตัวอย่าง)</small></p>
+        <table class="hours" id="hours">
+          <caption>เวลาเปิดร้าน</caption>
+          <tbody>
+            <tr data-d="1"><th scope="row">จันทร์</th><td>10:00–21:00</td></tr>
+            <tr data-d="2"><th scope="row">อังคาร</th><td>หยุด วันซักผ้าทั้งร้าน</td></tr>
+            <tr data-d="3"><th scope="row">พุธ</th><td>10:00–21:00</td></tr>
+            <tr data-d="4"><th scope="row">พฤหัสบดี</th><td>10:00–21:00</td></tr>
+            <tr data-d="5"><th scope="row">ศุกร์</th><td>10:00–21:00</td></tr>
+            <tr data-d="6"><th scope="row">เสาร์</th><td>10:00–21:00</td></tr>
+            <tr data-d="0"><th scope="row">อาทิตย์</th><td>10:00–21:00</td></tr>
+          </tbody>
+        </table>
+        <p class="small">รับคิวสุดท้าย: นวด 1 ชม. 20:00 · ชั่วโมงครึ่ง 19:30 · 2 ชม. 19:00 · ชุด 2½ ชม. 18:30</p>
+        <div class="acts">
+          <button class="btn go" type="button" data-demo="line">ทัก LINE จองคิว</button>
+          <button class="btn" type="button" data-demo="call">โทรถามว่าว่างกี่โมง</button>
+          <button class="btn" type="button" data-demo="map">เปิดใน Google Maps</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="big" aria-hidden="true">บ้านคราม</p>
+    <div class="foot-grid">
+      <p><b>บ้านคราม นวดแผนไทย</b>27 ซอยตลาดเช้า 4 ถนนวัดกลาง นนทบุรี<br>เปิด 10:00–21:00 หยุดวันอังคาร</p>
+      <p><b>รูปถ่ายจาก Unsplash</b>สมุนไพร 2 รูป: iKshana Productions<br>นวดเท้า: Oswald Elsaboath · ผ้าขนหนู: Irham Setyaki<br>อ่างแช่เท้า: nhxl bdl · นวดมือ: THLT LCX</p>
+      <div class="by">
+        <p><b>นี่คือเว็บตัวอย่างจาก SabaiKit ครับ</b>ร้านบ้านคราม ราคา ที่อยู่ และเบอร์โทร สมมติขึ้นทั้งหมดเพื่อให้เห็นงานออกแบบ เว็บของร้านจริงจะใช้รูป ราคา และข้อมูลของร้านคุณ</p>
+        <a class="btn" href="https://abcplease.github.io/sabaikit/">ดูตัวอย่างเว็บอื่นของ SabaiKit</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="ติดต่อร้าน">
+  <button type="button" data-demo="call"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3h3.500l1.500 4-2 1.500c1 2.200 2.300 3.500 4.500 4.500l1.500-2 4 1.500V16c0 .600-.400 1-1 1C9.500 17 3 10.500 3 4c0-.600.400-1 1-1z" fill="currentColor"/></svg>โทร</button>
+  <button type="button" data-demo="line">LINE</button>
+  <button type="button" data-demo="map"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18s6-5.600 6-10a6 6 0 10-12 0c0 4.400 6 10 6 10z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="8" r="2" fill="currentColor"/></svg>แผนที่</button>
+</nav>
+
+<dialog id="demo" aria-labelledby="demo-h">
+  <h2 id="demo-h">เว็บตัวอย่างครับ</h2>
+  <p id="demo-p"></p>
+  <form method="dialog"><button class="btn" autofocus>เข้าใจแล้ว</button></form>
+</dialog>
+
+</div>
+
+<script>
+(function(){
+  var OPEN=10, CLOSE=21, OFF=2;
+  var days=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  function bkk(){
+    try{
+      var p=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+      var o={};p.forEach(function(x){o[x.type]=x.value});
+      return {d:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(o.weekday),h:parseInt(o.hour,10)%24,m:parseInt(o.minute,10)};
+    }catch(e){var n=new Date();return {d:n.getDay(),h:n.getHours(),m:n.getMinutes()}}
+  }
+  var now=bkk(), st=document.getElementById('status');
+  if(st&&now.d>=0){
+    var open=now.d!==OFF&&now.h>=OPEN&&now.h<CLOSE, head, txt;
+    if(open){
+      head='ตอนนี้เปิดอยู่';var t=now.h*60+now.m;
+      txt=t<=18*60+30?'รับคิวทุกแบบถึง 18:30':t<=19*60?'รับคิวนวด 2 ชม. ลงมา':t<=19*60+30?'รับคิวนวด 1½ ชม. ลงมา':t<=20*60?'รับคิวนวด 1 ชม. ถึง 20:00':'ปิดรับคิวแล้ว ปิด 21:00';
+    }
+    else{
+      var add=(now.d!==OFF&&now.h<OPEN)?0:1, n=(now.d+add)%7;
+      if(n===OFF){n=(n+1)%7;add++}
+      head='ตอนนี้ปิดอยู่';txt='เปิด'+(add===0?'วันนี้':add===1?'พรุ่งนี้':'วัน'+days[n])+' 10:00';
+      st.classList.add('shut');
+    }
+    st.querySelector('em').textContent=head;st.querySelector('span').textContent=txt;
+    var row=document.querySelector('#hours tr[data-d="'+now.d+'"]'); if(row)row.classList.add('today');
+  }
+
+  var fits=[
+    {last:'20:00',t:'1 ชั่วโมง',o:[['นวดแผนไทย','250.-'],['นวดเท้า','250.-'],['นวดน้ำมัน','400.-']],m:'นวดแผนไทย 1 ชั่วโมง'},
+    {last:'19:30',t:'ชั่วโมงครึ่ง',o:[['นวดไทยกับลูกประคบ ได้ลูกประคบกลับบ้าน','500.-'],['นวดแผนไทย','350.-'],['นวดเท้า','350.-'],['นวดน้ำมัน','550.-']],m:'นวดไทยกับลูกประคบ ชั่วโมงครึ่ง'},
+    {last:'19:00',t:'2 ชั่วโมง',o:[['นวดไทยกับลูกประคบ ได้ลูกประคบกลับบ้าน','650.-'],['นวดแผนไทย','450.-'],['นวดน้ำมัน','700.-'],['นวดเท้า 1 ชม. แล้วนวดไทย 1 ชม.','500.-']],m:'นวดไทยกับลูกประคบ 2 ชั่วโมง'},
+    {last:'18:30',t:'2 ชั่วโมงครึ่ง',o:[['ชุด เท้าก่อน ตัวทีหลัง (นวดเท้า 1 ชม. แล้วนวดไทยกับลูกประคบ 1½ ชม.)','690.-'],['นวดแผนไทย 2 ชม. กับนวดคอ บ่า ไหล่','600.-']],m:'ชุด เท้าก่อน ตัวทีหลัง'}
+  ];
+  var fit=document.getElementById('fit'), tb=document.querySelectorAll('[data-t]');
+  function show(k){
+    var f=fits[k], li='';
+    f.o.forEach(function(x){li+='<li><b>'+x[0]+'</b><span>'+x[1]+'</span></li>'});
+    fit.innerHTML='<ul>'+li+'</ul><p class="last">เริ่มได้ช้าสุด '+f.last+' น. จะเสร็จทันร้านปิด 21:00</p><p class="msg"><small>ข้อความที่ส่งทาง LINE</small>สวัสดีครับ ขอจอง'+f.m+' 1 คน วัน... เวลา... ครับ/ค่ะ</p>';
+  }
+  tb.forEach(function(b){b.addEventListener('click',function(){
+    tb.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+    show(+b.getAttribute('data-t'));
+  })});
+  show(0);
+
+  var dlg=document.getElementById('demo'), dp=document.getElementById('demo-p');
+  var msg={call:'ในเว็บของร้านจริง ปุ่มนี้กดแล้วโทรหาร้านได้',line:'ในเว็บของร้านจริง ปุ่มนี้เปิดแชต LINE ของร้าน ลูกค้าพิมพ์จองคิวได้เลย',map:'ในเว็บของร้านจริง ปุ่มนี้เปิด Google Maps นำทางมาที่ร้าน'};
+  document.querySelectorAll('[data-demo]').forEach(function(b){b.addEventListener('click',function(){
+    dp.textContent=msg[b.getAttribute('data-demo')];
+    if(dlg.showModal)dlg.showModal();else alert(dp.textContent);
+  })});
+})();
+</script>
+</body>
+</html>
